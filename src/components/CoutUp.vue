@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h1>test</h1>
     <p>{{hour}}時間{{min}}分{{second}}秒</p>
-    <p>経過時間：{{count}}</p>
+    <p>工数：{{manHour}}</p>
     <button @click="timerStart()" v-show="!this.stopState">スタート</button>
     <button @click="timerStop()" v-show="this.stopState">ストップ</button>
-    <button @click="timerSave()" v-show="this.stopState">完了</button>
+    <button @click="timerSave()" v-show="!this.stopState">完了</button>
   </div>
 </template>
 
@@ -19,7 +18,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["count", "saveTime"]),
+    ...mapState(["count", "saveTime", "manHour"]),
     hour: function() {
       return Math.floor(this.$store.state.count / 3600);
     },
@@ -33,9 +32,10 @@ export default {
   methods: {
     timerStart() {
       this.stopState = true;
-      this.$store.dispatch("timerStart", { stopTime: 0 });
+      this.$store.dispatch("timerStart");
     },
     timerStop: function() {
+      this.stopState = false;
       clearInterval(this.$store.dispatch("timerStop"));
     },
     timerSave: function() {
